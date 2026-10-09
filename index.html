@@ -155,7 +155,7 @@ if(sort==="low")list.sort((a,b)=>a.price-b.price);
 if(sort==="high")list.sort((a,b)=>b.price-a.price);
 document.getElementById("noresults").style.display=list.length?"none":"block";
 document.getElementById("foodgrid").innerHTML=list.map(d=>`<article class="food">
-<img src="${d.img}" alt="${d.name}" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/600x400/fff0df/6a503b?text='+encodeURIComponent('${d.name}')">
+const dishes = [ onerror="this.onerror=null;this.src='https://placehold.co/600x400/fff0df/6a503b?text='+encodeURIComponent('${d.name}')">
 <div class="foodbody"><span class="tag">${d.cat}</span><h3>${d.name}</h3><p>${d.desc}</p><div class="foodfoot"><span class="price">₹${d.price}</span><button class="add" onclick="add(${d.id})">+ Add</button></div></div></article>`).join("");
 }
 function add(id){cart[id]=(cart[id]||0)+1;updateCart();notice("Added to your tray!")}
