@@ -1,0 +1,188 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Campus Rasoi | Smart Canteen</title>
+<style>
+:root{--orange:#e96932;--green:#23734c;--cream:#fff9ef;--ink:#29291f}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:var(--cream);color:var(--ink)}
+header{background:#fff;padding:16px 6%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;box-shadow:0 2px 12px #0001;position:sticky;top:0;z-index:5}
+.logo{font-size:25px;font-weight:900;color:var(--green)}.logo span{color:var(--orange)}
+header small{display:block;font-size:11px;color:#777;margin-top:4px}
+button{cursor:pointer;border:0;border-radius:9px;padding:11px 15px;font-weight:bold}
+.primary{background:var(--orange);color:white}
+.cartbtn{background:#fff0e6;color:#a3431e}
+.hero{padding:54px 6%;background:linear-gradient(110deg,#fce7c5,#fff7e8 60%,#f9d9bb);display:grid;grid-template-columns:1.2fr 1fr;gap:28px;align-items:center}
+.eyebrow{color:var(--green);font-weight:bold;letter-spacing:2px;font-size:12px}
+h1{font-size:clamp(36px,5vw,60px);line-height:1.04;margin:14px 0}
+.hero p{line-height:1.7;color:#666;max-width:500px}
+.hero img{width:100%;height:310px;object-fit:cover;border-radius:22px;box-shadow:0 15px 35px #763d2030}
+.stats{display:flex;gap:22px;flex-wrap:wrap;margin-top:24px;font-size:13px}
+.stats b{color:var(--green)}
+main{padding:36px 6% 60px}
+.sectiontop{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+h2{margin:0 0 8px;font-size:29px}
+.muted{color:#777;font-size:14px}
+.search{margin:24px 0 15px;display:flex;gap:10px;flex-wrap:wrap}
+input,select{padding:12px;border:1px solid #e6ded1;border-radius:9px;background:white;font-size:14px;min-width:0}
+#search{flex:1;min-width:190px}
+.filters{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:25px}
+.filters button{background:#fff;border:1px solid #eee0d0;color:#555}
+.filters button.active{background:var(--green);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.food{background:white;border-radius:16px;overflow:hidden;border:1px solid #f0e9df;transition:.2s}
+.food:hover{transform:translateY(-3px);box-shadow:0 10px 25px #0000000b}
+.food img{width:100%;height:155px;object-fit:cover;background:#eee}
+.foodbody{padding:14px}
+.foodbody h3{font-size:16px;margin:0 0 7px}
+.foodbody p{font-size:12px;color:#777;min-height:30px;line-height:1.5}
+.foodfoot{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.price{font-weight:900;color:var(--green)}
+.add{background:#eaf5ed;color:var(--green);padding:9px 11px}
+.tag{font-size:10px;background:#fff0df;color:#97512d;padding:5px 7px;border-radius:5px}
+footer{padding:26px 6%;background:#203b2d;color:#fff;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}
+footer p{color:#d5e0d7;font-size:13px}
+.overlay{position:fixed;inset:0;background:#0007;z-index:10;display:none}
+.overlay.show{display:block}
+.drawer{position:absolute;right:0;top:0;height:100%;width:min(430px,100%);background:#fff;padding:24px;overflow:auto}
+.drawerhead{display:flex;justify-content:space-between;align-items:center}
+.cartrow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:15px 0;border-bottom:1px solid #eee}
+.cartrow small{color:#777}
+.qty{display:flex;align-items:center;gap:8px}
+.qty button,.close{background:#f5f1e9;padding:7px 10px}
+.total{display:flex;justify-content:space-between;font-size:19px;font-weight:bold;margin:20px 0}
+.full{width:100%;margin-top:10px}
+.empty{text-align:center;color:#777;padding:30px 0}
+#notice{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#203b2d;color:white;padding:12px 20px;border-radius:10px;display:none;z-index:20}
+@media(max-width:950px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.hero{grid-template-columns:1fr 1fr}}
+@media(max-width:650px){.hero{grid-template-columns:1fr;padding:35px 6%}.hero img{height:230px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}header{position:static}h2{font-size:24px}}
+@media(max-width:390px){.grid{grid-template-columns:1fr}.food img{height:200px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">Campus <span>Rasoi.</span><small>YOUR CAMPUS. YOUR CRAVINGS.</small></div>
+  <button class="cartbtn" onclick="openCart()">🛒 My Tray <span id="cartcount">0</span></button>
+</header>
+
+<section class="hero">
+  <div>
+    <div class="eyebrow">FRESH • QUICK • DESI</div>
+    <h1>Campus hunger?<br>Sorted. <span style="color:#e96932">Yaar!</span></h1>
+    <p>Your favourite college canteen classics, from piping-hot vada pav to crispy dosa. Pick your food, add it to your tray, and place your order.</p>
+    <button class="primary" onclick="document.getElementById('menu').scrollIntoView({behavior:'smooth'})">Explore the menu ↓</button>
+    <div class="stats"><span>🍽️ <b>Desi favourites</b></span><span>💸 <b>Student-friendly</b></span><span>⚡ <b>Easy ordering</b></span></div>
+  </div>
+  <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=1000&q=85" alt="Indian snacks served fresh">
+</section>
+
+<main id="menu">
+  <div class="sectiontop">
+    <div><h2>The Canteen Menu</h2><div class="muted">Good food. Good mood. No boring breaks.</div></div>
+    <span class="tag">MADE FOR CAMPUS LIFE</span>
+  </div>
+  <div class="search">
+    <input id="search" type="search" placeholder="🔎 Search poha, dosa, chai..." oninput="renderMenu()">
+    <select id="sort" onchange="renderMenu()"><option value="default">Sort: Recommended</option><option value="low">Price: Low to high</option><option value="high">Price: High to low</option></select>
+  </div>
+  <div class="filters" id="filters"></div>
+  <div class="grid" id="foodgrid"></div>
+  <p id="noresults" class="empty" style="display:none">No dishes found. Try another search!</p>
+</main>
+
+<footer>
+  <div><strong>Campus Rasoi 🍛</strong><p>Your campus food stop, made simple.</p></div>
+  <div><strong>Fresh bites. Happy breaks.</strong><p>Student project · Smart Canteen Management System</p></div>
+</footer>
+
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeCart()">
+  <div class="drawer">
+    <div class="drawerhead"><h2>Your Tray 🛒</h2><button class="close" onclick="closeCart()">✕</button></div>
+    <p class="muted">Review your campus cravings.</p>
+    <div id="cartitems"></div>
+    <div class="total"><span>Total</span><span id="total">₹0</span></div>
+    <hr style="border:0;border-top:1px solid #eee">
+    <h3>Order details</h3>
+    <input id="student" placeholder="Your name" style="width:100%;margin:6px 0">
+    <input id="roll" placeholder="Roll number / student ID" style="width:100%;margin:6px 0">
+    <select id="pickup" style="width:100%;margin:6px 0"><option value="10 min">Pickup in 10 minutes</option><option value="15 min">Pickup in 15 minutes</option><option value="20 min">Pickup in 20 minutes</option></select>
+    <button class="primary full" onclick="placeOrder()">Place demo order</button>
+    <p class="muted" style="font-size:11px;line-height:1.5">Demo only: no payment is collected and no order is sent to a real canteen.</p>
+  </div>
+</div>
+<div id="notice"></div>
+
+<script>
+const dishes=[
+{id:1,name:"Poha",price:25,cat:"Breakfast",desc:"Light, fluffy Maharashtrian poha.",img:"https://loremflickr.com/700/500/poha,indianfood?lock=1"},
+{id:2,name:"Misal Pav",price:50,cat:"Snacks",desc:"Spicy misal, farsan and soft pav.",img:"https://loremflickr.com/700/500/misalpav?lock=2"},
+{id:3,name:"Idli Sambar",price:35,cat:"Breakfast",desc:"Soft idlis with sambar and chutney.",img:"https://loremflickr.com/700/500/idli,sambar?lock=3"},
+{id:4,name:"Vada Pav",price:20,cat:"Snacks",desc:"Mumbai's iconic spicy potato vada pav.",img:"https://loremflickr.com/700/500/vadapav?lock=4"},
+{id:5,name:"Samosa",price:15,cat:"Snacks",desc:"Crispy pastry with savoury potato filling.",img:"https://loremflickr.com/700/500/samosa,indianfood?lock=5"},
+{id:6,name:"Masala Dosa",price:60,cat:"South Indian",desc:"Crispy dosa with potato masala.",img:"https://loremflickr.com/700/500/masaladosa?lock=6"},
+{id:7,name:"Medu Vada",price:30,cat:"South Indian",desc:"Golden lentil fritters with chutney.",img:"https://loremflickr.com/700/500/meduvada?lock=7"},
+{id:8,name:"Pav Bhaji",price:55,cat:"Snacks",desc:"Mumbai-style bhaji, buttered pav.",img:"https://loremflickr.com/700/500/pavbhaji?lock=8"},
+{id:9,name:"Veg Sandwich",price:40,cat:"Quick Bites",desc:"Toasted sandwich with fresh vegetables.",img:"https://loremflickr.com/700/500/vegetablesandwich?lock=9"},
+{id:10,name:"Cheese Toast",price:45,cat:"Quick Bites",desc:"Toasty bread with melted cheese.",img:"https://loremflickr.com/700/500/cheesetoast?lock=10"},
+{id:11,name:"Uttapam",price:50,cat:"South Indian",desc:"Soft savoury pancake with vegetables.",img:"https://loremflickr.com/700/500/uttapam?lock=11"},
+{id:12,name:"Veg Fried Rice",price:60,cat:"Meals",desc:"Vegetable fried rice with Indian-style seasoning.",img:"https://loremflickr.com/700/500/vegetablefriedrice?lock=12"},
+{id:13,name:"Chole Kulche",price:55,cat:"Meals",desc:"Tangy chickpea curry with kulcha.",img:"https://loremflickr.com/700/500/cholekulche?lock=13"},
+{id:14,name:"Aloo Paratha",price:45,cat:"Meals",desc:"Stuffed flatbread served hot.",img:"https://loremflickr.com/700/500/alooparatha?lock=14"},
+{id:15,name:"Veg Biryani",price:80,cat:"Meals",desc:"Fragrant rice with vegetables and spices.",img:"https://loremflickr.com/700/500/vegetablebiryani?lock=15"},
+{id:16,name:"Sabudana Khichdi",price:45,cat:"Breakfast",desc:"Maharashtrian tapioca and peanut classic.",img:"https://loremflickr.com/700/500/sabudana,khichdi?lock=16"},
+{id:17,name:"Thalipeeth",price:35,cat:"Breakfast",desc:"Traditional multigrain Maharashtrian flatbread.",img:"https://loremflickr.com/700/500/thalipeeth?lock=17"},
+{id:18,name:"Puran Poli",price:40,cat:"Sweets",desc:"Sweet lentil-stuffed traditional flatbread.",img:"https://loremflickr.com/700/500/puranpoli?lock=18"},
+{id:19,name:"Cutting Chai",price:12,cat:"Drinks",desc:"Classic Mumbai-style masala tea.",img:"https://loremflickr.com/700/500/indiantea,chai?lock=19"},
+{id:20,name:"Masala Chai",price:18,cat:"Drinks",desc:"Warm tea brewed with aromatic spices.",img:"https://loremflickr.com/700/500/masalachai?lock=20"},
+{id:21,name:"Cold Coffee",price:45,cat:"Drinks",desc:"Chilled, creamy coffee for study breaks.",img:"https://loremflickr.com/700/500/coldcoffee?lock=21"},
+{id:22,name:"Nimbu Pani",price:20,cat:"Drinks",desc:"Refreshing Indian lemon drink.",img:"https://loremflickr.com/700/500/nimbupani,lemonade?lock=22"},
+{id:23,name:"Gulab Jamun",price:25,cat:"Sweets",desc:"Soft syrup-soaked Indian sweet.",img:"https://loremflickr.com/700/500/gulabjamun?lock=23"},
+{id:24,name:"Shrikhand",price:35,cat:"Sweets",desc:"Creamy sweetened yoghurt with cardamom.",img:"https://loremflickr.com/700/500/shrikhand?lock=24"}
+];
+const categories=["All","Breakfast","Snacks","South Indian","Quick Bites","Meals","Drinks","Sweets"];
+let active="All",cart={};
+function renderFilters(){
+document.getElementById("filters").innerHTML=categories.map(c=>`<button class="${active===c?'active':''}" onclick="active='${c}';renderFilters();renderMenu()">${c}</button>`).join("");
+}
+function renderMenu(){
+let q=document.getElementById("search").value.toLowerCase();
+let list=dishes.filter(d=>(active==="All"||d.cat===active)&&d.name.toLowerCase().includes(q));
+let sort=document.getElementById("sort").value;
+if(sort==="low")list.sort((a,b)=>a.price-b.price);
+if(sort==="high")list.sort((a,b)=>b.price-a.price);
+document.getElementById("noresults").style.display=list.length?"none":"block";
+document.getElementById("foodgrid").innerHTML=list.map(d=>`<article class="food">
+<img src="${d.img}" alt="${d.name}" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/600x400/fff0df/6a503b?text='+encodeURIComponent('${d.name}')">
+<div class="foodbody"><span class="tag">${d.cat}</span><h3>${d.name}</h3><p>${d.desc}</p><div class="foodfoot"><span class="price">₹${d.price}</span><button class="add" onclick="add(${d.id})">+ Add</button></div></div></article>`).join("");
+}
+function add(id){cart[id]=(cart[id]||0)+1;updateCart();notice("Added to your tray!")}
+function change(id,n){cart[id]=(cart[id]||0)+n;if(cart[id]<=0)delete cart[id];updateCart()}
+function updateCart(){
+let count=Object.values(cart).reduce((a,b)=>a+b,0);
+let total=dishes.reduce((s,d)=>s+d.price*(cart[d.id]||0),0);
+document.getElementById("cartcount").textContent=count;
+document.getElementById("total").textContent="₹"+total;
+let entries=dishes.filter(d=>cart[d.id]);
+document.getElementById("cartitems").innerHTML=entries.length?entries.map(d=>`<div class="cartrow"><div><strong>${d.name}</strong><br><small>₹${d.price} each</small></div><div class="qty"><button onclick="change(${d.id},-1)">−</button><b>${cart[d.id]}</b><button onclick="change(${d.id},1)">+</button></div></div>`).join(""):'<div class="empty">Your tray is empty 🍽️<br>Add something tasty!</div>';
+}
+function openCart(){document.getElementById("overlay").classList.add("show")}
+function closeCart(){document.getElementById("overlay").classList.remove("show")}
+function notice(msg){let n=document.getElementById("notice");n.textContent=msg;n.style.display="block";setTimeout(()=>n.style.display="none",1800)}
+function placeOrder(){
+if(!Object.keys(cart).length){notice("Add some food to your tray first!");return}
+let name=document.getElementById("student").value.trim();
+let roll=document.getElementById("roll").value.trim();
+if(!name||!roll){notice("Please enter your name and student ID.");return}
+let total=dishes.reduce((s,d)=>s+d.price*(cart[d.id]||0),0);
+let orderId="CR"+Date.now().toString().slice(-6);
+let summary=dishes.filter(d=>cart[d.id]).map(d=>`${d.name} x${cart[d.id]}`).join(", ");
+alert(`Demo order placed!\nOrder ID: ${orderId}\nStudent: ${name}\nItems: ${summary}\nTotal: ₹${total}\nPickup: ${document.getElementById("pickup").value}\n\nThis is a website demo; the order has not been sent to a real canteen.`);
+cart={};updateCart();closeCart();
+}
+renderFilters();renderMenu();updateCart();
+</script>
+</body>
+</html>
