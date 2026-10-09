@@ -9,18 +9,19 @@
 :root{--orange:#e96932;--green:#23734c;--cream:#fff9ef;--ink:#29291f}
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:var(--cream);color:var(--ink)}
-header{background:white;padding:16px 6%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:5;box-shadow:0 2px 12px #0001}
+header{background:#fff;padding:16px 6%;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 12px #0001;position:sticky;top:0;z-index:5}
 .logo{font-size:25px;font-weight:900;color:var(--green)}
 .logo span{color:var(--orange)}
 .logo small{display:block;font-size:11px;color:#777;margin-top:4px}
 button{cursor:pointer;border:0;border-radius:9px;padding:11px 15px;font-weight:bold}
-.primary{background:var(--orange);color:white}
+.primary{background:var(--orange);color:#fff}
 .cartbtn{background:#fff0e6;color:#a3431e}
 .hero{padding:45px 6%;background:linear-gradient(110deg,#fce7c5,#fff7e8 60%,#f9d9bb);display:grid;grid-template-columns:1.2fr 1fr;gap:28px;align-items:center}
 .eyebrow{color:var(--green);font-weight:bold;letter-spacing:2px;font-size:12px}
 h1{font-size:clamp(36px,5vw,60px);line-height:1.04;margin:14px 0}
 .hero p{line-height:1.7;color:#666}
-.hero-art{height:290px;border-radius:22px;background:linear-gradient(135deg,#f4c078,#ffe9cb);display:grid;place-items:center;font-size:90px}
+.hero-art{height:300px;border-radius:22px;overflow:hidden;background:#f6d8b7}
+.hero-art img{width:100%;height:100%;object-fit:cover}
 .stats{display:flex;gap:18px;flex-wrap:wrap;margin-top:24px;font-size:13px}
 .stats b{color:var(--green)}
 main{padding:36px 6% 60px;min-height:300px}
@@ -34,8 +35,11 @@ input,select{padding:12px;border:1px solid #e6ded1;border-radius:9px;background:
 .filters button{background:white;border:1px solid #eee0d0;color:#555}
 .filters button.active{background:var(--green);color:white}
 .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
-.food{background:white;border-radius:16px;overflow:hidden;border:1px solid #f0e9df}
-.food-image{height:150px;background:linear-gradient(135deg,#fff0dc,#f6d8b7);display:grid;place-items:center;font-size:65px}
+.food{background:white;border-radius:16px;overflow:hidden;border:1px solid #f0e9df;transition:.2s}
+.food:hover{transform:translateY(-3px);box-shadow:0 10px 25px #0001}
+.food-image{height:160px;position:relative;display:grid;place-items:center;background:linear-gradient(135deg,#fff0dc,#f6d8b7);overflow:hidden}
+.food-image img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.food-emoji{font-size:64px}
 .foodbody{padding:14px}
 .foodbody h3{font-size:16px;margin:10px 0 7px}
 .foodbody p{font-size:12px;color:#777;min-height:30px;line-height:1.5}
@@ -43,6 +47,7 @@ input,select{padding:12px;border:1px solid #e6ded1;border-radius:9px;background:
 .foodfoot{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .price{font-weight:900;color:var(--green)}
 .add{background:#eaf5ed;color:var(--green)}
+.empty{text-align:center;color:#777;padding:25px}
 footer{padding:26px 6%;background:#203b2d;color:white;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}
 footer p{color:#d5e0d7;font-size:13px}
 .overlay{position:fixed;inset:0;background:#0007;z-index:10;display:none}
@@ -54,14 +59,14 @@ footer p{color:#d5e0d7;font-size:13px}
 .qty button,.close{background:#f5f1e9;padding:7px 10px}
 .total{font-size:19px;font-weight:bold;margin:20px 0}
 .full{width:100%;margin-top:10px}
-.empty{text-align:center;color:#777;padding:25px}
-#notice{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#203b2d;color:white;padding:12px 20px;border-radius:10px;display:none;z-index:20}
-@media(max-width:850px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:600px){.hero{grid-template-columns:1fr}.hero-art{height:200px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}header{position:static}}
+#notice{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#203b2d;color:white;padding:12px 20px;border-radius:10px;display:none;z-index:20;text-align:center}
+@media(max-width:900px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:650px){.hero{grid-template-columns:1fr}.hero-art{height:220px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}header{position:static}}
 @media(max-width:390px){.grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
+
 <header>
   <div class="logo">Campus <span>Rasoi.</span><small>YOUR CAMPUS. YOUR CRAVINGS.</small></div>
   <button class="cartbtn" onclick="openCart()">🛒 My Tray <span id="cartcount">0</span></button>
@@ -75,7 +80,9 @@ footer p{color:#d5e0d7;font-size:13px}
     <button class="primary" onclick="document.getElementById('menu').scrollIntoView({behavior:'smooth'})">Explore the menu ↓</button>
     <div class="stats"><span>🍽️ <b>Desi favourites</b></span><span>💸 <b>Student-friendly</b></span><span>⚡ <b>Easy ordering</b></span></div>
   </div>
-  <div class="hero-art">🍛 🥘 🍽️</div>
+  <div class="hero-art">
+    <img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=1000&q=80" alt="Indian food" onerror="this.style.display='none';this.parentElement.innerHTML='<div style=&quot;font-size:90px;text-align:center;padding:70px 0&quot;>🍛🥘🍽️</div>'">
+  </div>
 </section>
 
 <main id="menu">
@@ -112,47 +119,47 @@ footer p{color:#d5e0d7;font-size:13px}
     <input id="student" placeholder="Your name" style="width:100%;margin:6px 0">
     <input id="roll" placeholder="Roll number / student ID" style="width:100%;margin:6px 0">
     <select id="pickup" style="width:100%;margin:6px 0">
-      <option>Pickup in 10 minutes</option><option>Pickup in 15 minutes</option><option>Pickup in 20 minutes</option>
+      <option>Pickup in 10 minutes</option>
+      <option>Pickup in 15 minutes</option>
+      <option>Pickup in 20 minutes</option>
     </select>
     <button class="primary full" onclick="placeOrder()">Place demo order</button>
     <p class="muted">Demo only: no payment is collected and no order is sent to a real canteen.</p>
   </div>
 </div>
-<div id="notice" role="status"></div>
+<div id="notice" role="status" aria-live="polite"></div>
 
 <script>
 const dishes = [
-{id:1,name:"Poha",price:25,cat:"Breakfast",desc:"Light, fluffy Maharashtrian poha.",emoji:"🍋"},
-{id:2,name:"Misal Pav",price:50,cat:"Snacks",desc:"Spicy misal, farsan and soft pav.",emoji:"🍲"},
-{id:3,name:"Idli Sambar",price:35,cat:"Breakfast",desc:"Soft idlis with sambar and chutney.",emoji:"🥥"},
-{id:4,name:"Vada Pav",price:20,cat:"Snacks",desc:"Mumbai's iconic spicy potato vada pav.",emoji:"🍔"},
-{id:5,name:"Samosa",price:15,cat:"Snacks",desc:"Crispy pastry with savoury potato filling.",emoji:"🥟"},
-{id:6,name:"Masala Dosa",price:60,cat:"South Indian",desc:"Crispy dosa with potato masala.",emoji:"🥞"},
-{id:7,name:"Medu Vada",price:30,cat:"South Indian",desc:"Golden lentil fritters with chutney.",emoji:"🍩"},
-{id:8,name:"Pav Bhaji",price:55,cat:"Snacks",desc:"Mumbai-style bhaji with buttered pav.",emoji:"🍛"},
-{id:9,name:"Veg Sandwich",price:40,cat:"Quick Bites",desc:"Toasted sandwich with vegetables.",emoji:"🥪"},
-{id:10,name:"Cheese Toast",price:45,cat:"Quick Bites",desc:"Toasty bread with melted cheese.",emoji:"🧀"},
-{id:11,name:"Uttapam",price:50,cat:"South Indian",desc:"Savoury pancake topped with vegetables.",emoji:"🥞"},
-{id:12,name:"Veg Fried Rice",price:60,cat:"Meals",desc:"Vegetable fried rice.",emoji:"🍚"},
-{id:13,name:"Chole Kulche",price:55,cat:"Meals",desc:"Tangy chickpea curry with kulcha.",emoji:"🍲"},
-{id:14,name:"Aloo Paratha",price:45,cat:"Meals",desc:"Stuffed flatbread served hot.",emoji:"🫓"},
-{id:15,name:"Veg Biryani",price:80,cat:"Meals",desc:"Fragrant rice with vegetables and spices.",emoji:"🍛"},
-{id:16,name:"Sabudana Khichdi",price:45,cat:"Breakfast",desc:"Maharashtrian tapioca and peanut classic.",emoji:"🥣"},
-{id:17,name:"Thalipeeth",price:35,cat:"Breakfast",desc:"Traditional Maharashtrian flatbread.",emoji:"🫓"},
-{id:18,name:"Puran Poli",price:40,cat:"Sweets",desc:"Sweet lentil-stuffed flatbread.",emoji:"🫓"},
-{id:19,name:"Cutting Chai",price:12,cat:"Drinks",desc:"Classic Mumbai-style tea.",emoji:"☕"},
-{id:20,name:"Masala Chai",price:18,cat:"Drinks",desc:"Tea brewed with aromatic spices.",emoji:"🍵"},
-{id:21,name:"Cold Coffee",price:45,cat:"Drinks",desc:"Chilled, creamy coffee.",emoji:"🥤"},
-{id:22,name:"Nimbu Pani",price:20,cat:"Drinks",desc:"Refreshing Indian lemon drink.",emoji:"🍋"},
-{id:23,name:"Gulab Jamun",price:25,cat:"Sweets",desc:"Soft syrup-soaked Indian sweet.",emoji:"🍮"},
-{id:24,name:"Shrikhand",price:35,cat:"Sweets",desc:"Creamy sweetened yoghurt with cardamom.",emoji:"🍨"}
+{id:1,name:"Poha",price:25,cat:"Breakfast",desc:"Light, fluffy Maharashtrian poha.",emoji:"🍋",photo:"https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=700&q=80"},
+{id:2,name:"Misal Pav",price:50,cat:"Snacks",desc:"Spicy misal, farsan and soft pav.",emoji:"🍲",photo:"https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=700&q=80"},
+{id:3,name:"Idli Sambar",price:35,cat:"Breakfast",desc:"Soft idlis with sambar and chutney.",emoji:"🥥",photo:"https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=700&q=80"},
+{id:4,name:"Vada Pav",price:20,cat:"Snacks",desc:"Mumbai's iconic spicy potato vada pav.",emoji:"🍔",photo:"https://images.unsplash.com/photo-1601050690117-94f5f6fa8bd7?auto=format&fit=crop&w=700&q=80"},
+{id:5,name:"Samosa",price:15,cat:"Snacks",desc:"Crispy pastry with savoury potato filling.",emoji:"🥟",photo:"https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=700&q=80"},
+{id:6,name:"Masala Dosa",price:60,cat:"South Indian",desc:"Crispy dosa with potato masala.",emoji:"🥞",photo:"https://images.unsplash.com/photo-1668236543090-82eba5ee5976?auto=format&fit=crop&w=700&q=80"},
+{id:7,name:"Medu Vada",price:30,cat:"South Indian",desc:"Golden lentil fritters with chutney.",emoji:"🍩",photo:"https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=700&q=80"},
+{id:8,name:"Pav Bhaji",price:55,cat:"Snacks",desc:"Mumbai-style bhaji with buttered pav.",emoji:"🍛",photo:"https://images.unsplash.com/photo-1606491956689-2ea866880c84?auto=format&fit=crop&w=700&q=80"},
+{id:9,name:"Veg Sandwich",price:40,cat:"Quick Bites",desc:"Toasted sandwich with vegetables.",emoji:"🥪",photo:"https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=700&q=80"},
+{id:10,name:"Cheese Toast",price:45,cat:"Quick Bites",desc:"Toasty bread with melted cheese.",emoji:"🧀",photo:"https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=700&q=80"},
+{id:11,name:"Uttapam",price:50,cat:"South Indian",desc:"Savoury pancake topped with vegetables.",emoji:"🥞",photo:"https://images.unsplash.com/photo-1668236543090-82eba5ee5976?auto=format&fit=crop&w=700&q=80"},
+{id:12,name:"Veg Fried Rice",price:60,cat:"Meals",desc:"Vegetable fried rice.",emoji:"🍚",photo:"https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=700&q=80"},
+{id:13,name:"Chole Kulche",price:55,cat:"Meals",desc:"Tangy chickpea curry with kulcha.",emoji:"🍲",photo:"https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=700&q=80"},
+{id:14,name:"Aloo Paratha",price:45,cat:"Meals",desc:"Stuffed flatbread served hot.",emoji:"🫓",photo:"https://images.unsplash.com/photo-1626500155537-93690c24099e?auto=format&fit=crop&w=700&q=80"},
+{id:15,name:"Veg Biryani",price:80,cat:"Meals",desc:"Fragrant rice with vegetables and spices.",emoji:"🍛",photo:"https://images.unsplash.com/photo-1563379091339-03246963d96c?auto=format&fit=crop&w=700&q=80"},
+{id:16,name:"Sabudana Khichdi",price:45,cat:"Breakfast",desc:"Maharashtrian tapioca and peanut classic.",emoji:"🥣",photo:"https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=700&q=80"},
+{id:17,name:"Thalipeeth",price:35,cat:"Breakfast",desc:"Traditional Maharashtrian flatbread.",emoji:"🫓",photo:"https://images.unsplash.com/photo-1626500155537-93690c24099e?auto=format&fit=crop&w=700&q=80"},
+{id:18,name:"Puran Poli",price:40,cat:"Sweets",desc:"Sweet lentil-stuffed flatbread.",emoji:"🫓",photo:"https://images.unsplash.com/photo-1605197161470-5d2d7e6d3a83?auto=format&fit=crop&w=700&q=80"},
+{id:19,name:"Cutting Chai",price:12,cat:"Drinks",desc:"Classic Mumbai-style tea.",emoji:"☕",photo:"https://images.unsplash.com/photo-1571934811356-5cc061b6821f?auto=format&fit=crop&w=700&q=80"},
+{id:20,name:"Masala Chai",price:18,cat:"Drinks",desc:"Tea brewed with aromatic spices.",emoji:"🍵",photo:"https://images.unsplash.com/photo-1571934811356-5cc061b6821f?auto=format&fit=crop&w=700&q=80"},
+{id:21,name:"Cold Coffee",price:45,cat:"Drinks",desc:"Chilled, creamy coffee.",emoji:"🥤",photo:"https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=700&q=80"},
+{id:22,name:"Nimbu Pani",price:20,cat:"Drinks",desc:"Refreshing Indian lemon drink.",emoji:"🍋",photo:"https://images.unsplash.com/photo-1513558161293-cdaf765edfd7?auto=format&fit=crop&w=700&q=80"},
+{id:23,name:"Gulab Jamun",price:25,cat:"Sweets",desc:"Soft syrup-soaked Indian sweet.",emoji:"🍮",photo:"https://images.unsplash.com/photo-1666190092159-4d4b4c3f8f4b?auto=format&fit=crop&w=700&q=80"},
+{id:24,name:"Shrikhand",price:35,cat:"Sweets",desc:"Creamy sweetened yoghurt with cardamom.",emoji:"🍨",photo:"https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=700&q=80"}
 ];
 
 const categories=["All","Breakfast","Snacks","South Indian","Quick Bites","Meals","Drinks","Sweets"];
-let active="All";
-let cart={};
-
-const $ = id => document.getElementById(id);
+let active="All",cart={};
+const $=id=>document.getElementById(id);
 
 function renderFilters(){
   $("filters").innerHTML=categories.map(c=>
@@ -166,13 +173,18 @@ function renderMenu(){
     (active==="All"||d.cat===active) &&
     (d.name.toLowerCase().includes(query)||d.cat.toLowerCase().includes(query))
   );
-  if($("sort").value==="low") list.sort((a,b)=>a.price-b.price);
-  if($("sort").value==="high") list.sort((a,b)=>b.price-a.price);
+  if($("sort").value==="low")list.sort((a,b)=>a.price-b.price);
+  if($("sort").value==="high")list.sort((a,b)=>b.price-a.price);
+  $("noresults").hidden=list.length>0;
 
-  $("noresults").hidden=list.length!==0;
   $("foodgrid").innerHTML=list.map(d=>`
     <article class="food">
-      <div class="food-image" role="img" aria-label="${d.name}">${d.emoji}</div>
+      <div class="food-image">
+        <span class="food-emoji">${d.emoji}</span>
+        <img src="${d.photo}" alt="${d.name}" loading="lazy"
+          onload="this.previousElementSibling.style.display='none'"
+          onerror="this.remove()">
+      </div>
       <div class="foodbody">
         <span class="tag">${d.cat}</span>
         <h3>${d.name}</h3><p>${d.desc}</p>
@@ -191,28 +203,32 @@ function updateCart(){
   $("cartitems").innerHTML=items.length?items.map(d=>`
     <div class="cartrow"><div><b>${d.name}</b><br><small>₹${d.price} each</small></div>
     <div class="qty"><button data-change="${d.id}" data-amount="-1">−</button>
-    <b>${cart[d.id]}</b><button data-change="${d.id}" data-amount="1">+</button></div></div>
-  `).join(""):'<p class="empty">Your tray is empty 🍽️</p>';
+    <b>${cart[d.id]}</b><button data-change="${d.id}" data-amount="1">+</button></div></div>`
+  ).join(""):'<p class="empty">Your tray is empty 🍽️</p>';
 }
 
 function add(id){cart[id]=(cart[id]||0)+1;updateCart();notice("Added to your tray!")}
-function change(id,amount){cart[id]=(cart[id]||0)+amount;if(cart[id]<=0)delete cart[id];updateCart()}
+function change(id,n){cart[id]=(cart[id]||0)+n;if(cart[id]<=0)delete cart[id];updateCart()}
 function openCart(){$("overlay").classList.add("show")}
 function closeCart(){$("overlay").classList.remove("show")}
-function notice(msg){$("notice").textContent=msg;$("notice").style.display="block";setTimeout(()=>$("notice").style.display="none",1800)}
+function notice(msg){
+  $("notice").textContent=msg;
+  $("notice").style.display="block";
+  setTimeout(()=>$("notice").style.display="none",1800);
+}
 
 $("filters").addEventListener("click",e=>{
-  const button=e.target.closest("button[data-category]");
-  if(!button)return;
-  active=button.dataset.category;renderFilters();renderMenu();
+  const b=e.target.closest("[data-category]");
+  if(!b)return;
+  active=b.dataset.category;renderFilters();renderMenu();
 });
 $("foodgrid").addEventListener("click",e=>{
-  const button=e.target.closest("button[data-add]");
-  if(button)add(Number(button.dataset.add));
+  const b=e.target.closest("[data-add]");
+  if(b)add(Number(b.dataset.add));
 });
 $("cartitems").addEventListener("click",e=>{
-  const button=e.target.closest("button[data-change]");
-  if(button)change(Number(button.dataset.change),Number(button.dataset.amount));
+  const b=e.target.closest("[data-change]");
+  if(b)change(Number(b.dataset.change),Number(b.dataset.amount));
 });
 $("search").addEventListener("input",renderMenu);
 $("sort").addEventListener("change",renderMenu);
@@ -223,8 +239,8 @@ function placeOrder(){
   const name=$("student").value.trim(),roll=$("roll").value.trim();
   if(!name||!roll){notice("Please enter your name and student ID.");return}
   const total=dishes.reduce((sum,d)=>sum+d.price*(cart[d.id]||0),0);
-  const summary=dishes.filter(d=>cart[d.id]).map(d=>`${d.name} x${cart[d.id]}`).join(", ");
-  alert(`Demo order placed!\nStudent: ${name}\nID: ${roll}\nItems: ${summary}\nTotal: ₹${total}\n${$("pickup").value}\n\nNo real order or payment was made.`);
+  const items=dishes.filter(d=>cart[d.id]).map(d=>`${d.name} x${cart[d.id]}`).join(", ");
+  alert(`Demo order placed!\nStudent: ${name}\nID: ${roll}\nItems: ${items}\nTotal: ₹${total}\n${$("pickup").value}\n\nNo real order or payment was made.`);
   cart={};updateCart();closeCart();
 }
 
